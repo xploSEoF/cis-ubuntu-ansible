@@ -1,141 +1,231 @@
 ---
 
-  - name: 4.5.1 Check if the grub config file exists (Not Scored)
-    stat: path=/etc/default/grub
-    register: grub_cfg_file
+  - name: 4.2.3 Ensure rsyslog or syslog-ng is installed (Scored)
+    apt:
+      name: "{{ syslog_package }}"
+      state: present
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.3
 
-  - name: 4.5.2 Determines if AppArmor is set in grub config (Not Scored)
-    command: "grep 'GRUB_CMDLINE_LINUX' /etc/default/grub"
-    register: grub_apparmor
+  - name: 4.2.1.1 Ensure rsyslog Service is enabled (Scored)
+    service:
+      name: rsyslog
+      state: started
+      enabled: yes
+    when: syslog_package == "rsyslog"
+    tags:
+      - section4
+      - section4.2
+      - section4.2.1.1
+
+  - name: 4.2.1.2 Ensure logging is configured (Not Scored)
+    lineinfile:
+        dest: /etc/rsyslog.conf
+        line: '{{ item }}'
+        insertafter: EOF
+    with_items:
+      - '*.emerg :omusrmsg:*'
+      - 'mail.* -/var/log/mail'
+      - 'mail.info -/var/log/mail.info'
+      - 'mail.warning -/var/log/mail.warn'
+      - 'mail.err /var/log/mail.err'
+      - 'news.crit -/var/log/news/news.crit'
+      - 'news.err -/var/log/news/news.err'
+      - 'news.notice -/var/log/news/news.notice'
+      - '*.=warning;*.=err -/var/log/warn'
+      - '*.crit /var/log/warn'
+      - '*.*;mail.none;news.none -/var/log/messages'
+      - 'local0,local1.* -/var/log/localmessages'
+      - 'local2,local3.* -/var/log/localmessages'
+      - 'local4,local5.* -/var/log/localmessages'
+      - 'local6,local7.* -/var/log/localmessages'
+    notify: restart rsyslog
+    when: syslog_package == "rsyslog"
+    tags:
+      - section4
+      - section4.2
+      - section4.2.1.2
+
+  - command: find /etc/rsyslog.d -type f
+    register: rsyslog_files
     changed_when: False
-    when: grub_cfg_file.stat.exists
-    always_run: True
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.1.3
 
-  - name: 4.5.3 Check if the extlinux config file exists (Not Scored)
-    stat: path=/extlinux.conf
-    register: extlinux_cfg_file
-    tags:
-      - section4
-      - section4.5
-
-  - name: 4.5.4 Determines if AppArmor is set in extlinux (Not Scored)
-    command: "grep 'apparmor' /extlinux.conf"
-    register: extlinux_apparmor
-    changed_when: False
-    when: extlinux_cfg_file.stat.exists
-    always_run: True
-    tags:
-      - section4
-      - section4.5
-
-  - name: 4.5.5 Determines if AppArmor is already set in boot config (Not Scored)
-    command: "grep CONFIG_DEFAULT_SECURITY_APPARMOR /boot/config-{{ ansible_kernel }}"
-    register: boot_apparmor
-    changed_when: False
-    always_run: True
-    tags:
-      - section4
-      - section4.5
-
-  - name: 4.5.6 Activate AppArmor (install) (Scored)
-    apt: >
-        name=apparmor
-        state=present
-    when: use_apparmor == True
-    tags:
-      - section4
-      - section4.5
-
-  - name: 4.5.7 Activate AppArmor (Kernel LSM - grub) (Scored)
-    lineinfile: >
-        dest='/etc/default/grub'
-        regexp='^GRUB_CMDLINE_LINUX=""'
-        line='GRUB_CMDLINE_LINUX=apparmor="1 security=apparmor"'
-        state=present
-    when: "(use_apparmor == True) and grub_cfg_file.stat.exists and ('apparmor' not in grub_apparmor['stdout']) and ('not set' in boot_apparmor['stdout'])"
-    tags:
-      - section4
-      - section4.5
-
-  - name: 4.5.8 Activate AppArmor (Kernel LSM - extlinux) (Scored)
-    lineinfile: >
-        dest='/extlinux.conf'
-        regexp="^append initrd="
-        line="append initrd={{ ansible_cmdline['initrd'] }} root={{ ansible_cmdline['root'] }} console=tty0 console={{ ansible_cmdline['console'] }} apparmor=1 security=apparmor ro quiet"
-    when: "(use_apparmor == True) and extlinux_cfg_file.stat.exists and ('apparmor' not in extlinux_apparmor['stdout']) and ('not set' in boot_cfg_apparmor['stdout'])"
-    tags:
-      - section4
-      - section4.5
-
-  - name: 4.5.9 Activate AppArmor (start) (Scored)
-    service: >
-        name=apparmor
-        state=started
-    when: use_apparmor == True
-    register: apparmor_status
+  - command: grep ^\\$FileCreateMode {{ item }}
+    with_items:
+      - '/etc/rsyslog.conf'
+      - '{{ rsyslog_files.stdout_lines }}'    
+    register: filecreate_exists
     ignore_errors: True
+    notify: restart rsyslog
+    when: syslog_package == "rsyslog"
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.1.3
 
-  - name: 4.5.10 Determine if AppArmor started without error (Not Scored)
-    fail: msg="Apparmor can not be started. This is normal behavior if you run the playbook for the first time.\nPlease reboot the machine and run it again to proceed with the rest of the playbook."
-    when: apparmor_status.failed is defined
-
-  - name: 4.5.11 Fix rsyslog /run/utmp permissions (Not Scored)
-    lineinfile: >
-        dest="/etc/apparmor.d/usr.sbin.rsyslogd"
-        line="  /run/utmp rk,"
-        insertbefore="  /var/spool/rsyslog/ r,"
-        state=present
-    when: use_apparmor == True
+  - name: 4.2.1.3 Ensure rsyslog default file permissions configured (Scored)
+    lineinfile:
+      dest: "{{ item }}"
+      regexp: '^\$FileCreateMode'
+      line: '$FileCreateMode 0640'
+    with_items:
+      - '/etc/rsyslog.conf'
+      - '{{ rsyslog_files.stdout_lines }}'
+    notify: restart rsyslog
+    when: filecreate_exists == 0 and syslog_package == "rsyslog"
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.1.3
 
-  - name: 4.5.12 Activate AppArmor (fix profiles) (Scored)
-    service: >
-        name=rsyslog
-        state=restarted
+  - command: grep "^*.*[^I][^I]*@" /etc/rsyslog.conf
+    register: remoteloghost
     changed_when: False
-    when: use_apparmor == True
+    failed_when: False
+    check_mode: no
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.1.4
 
-  - name: 4.5.13 Activate AppArmor (Scored)
-    command: apparmor_status
-    register: aa_status_lines
-    failed_when: '"0 profiles are loaded" in aa_status_lines.stdout_lines or "0 processes are in complain mode." not in aa_status_lines.stdout_lines or "0 processes are unconfined but have a profile defined." not in aa_status_lines.stdout_lines'
-        # - '"0 processes are unconfined but have a profile defined." not in aa_status_lines.stdout_lines'
+  - name: 4.2.1.4 Ensure rsyslog is configured to send logs to a remote log host (Scored)
+    lineinfile:
+      dest: /etc/rsyslog.conf
+      line: '*.* @@{{remote_logs_host_address}}'
+      insertafter: EOF
+      state: present
+    notify: restart rsyslog
+    when: set_rsyslog_remote == True and remoteloghost.rc == 1 and syslog_package == "rsyslog"
+    tags:
+      - section4
+      - section4.2
+      - section4.2.1.4
+
+  - command: grep '^$ModLoad imtcp' /etc/rsyslog.conf
+    register: moadloadpresent
+    failed_when: False
+    check_mode: no
+    tags:
+      - section4
+      - section4.2
+      - section4.2.1.5
+
+  - name: 4.2.1.5 Ensure remote rsyslog messages are only accepted on designated log hosts. (Not Scored)
+    lineinfile:
+      dest: /etc/rsyslog.conf
+      regexp: '^#({{ item }})'
+      line: '{{ item }}'
+      state: present
+    with_items:
+        - '$ModLoad imtcp'
+        - '$InputTCPServerRun 514'
+    notify: restart rsyslog
+    when: set_rsyslog_remote == True and moadloadpresent.rc == 1 and syslog_package == "rsyslog"
+    tags:
+      - section4
+      - section4.2
+      - section4.2.1.5
+
+  - command: dpkg-query -s syslog-ng
+    register: syslognginstalled
     changed_when: False
-    when: use_apparmor == True
+    failed_when: False
+    check_mode: no
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.2.1
 
-  - name: 4.5.14 Activate AppArmor (enforce install) (Scored)
-    apt: >
-        name=apparmor-utils
-        state=present
-    when: use_apparmor == True
+  - name: 4.2.2.1 Ensure syslog-ng service is enabled (Scored)
+    service:
+      name: syslog-ng
+      enabled: yes
+    when: syslognginstalled.rc == 0 and syslog_package == "syslog-ng"
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.2.1
 
-  - name: 4.5.15 Activate AppArmor (enforce) (Scored)
-    #shell: 'aa-enforce /etc/apparmor.d/*'
-    shell: for profile in /etc/apparmor.d/*; do aa-enforce $profile; done
-    register: aaenforce_rc
-    failed_when: aaenforce_rc.rc == 1
+  - name: 4.2.2.2 Ensure logging is configured (Not Scored)
+    lineinfile:
+        dest: /etc/syslog-ng/syslog-ng.conf
+        line: '{{ item }}'
+        insertafter: EOF
+    with_items:
+      - 'log { source(src); source(chroots); filter(f_console); destination(console); };'
+      - 'log { source(src); source(chroots); filter(f_console); destination(xconsole); };'
+      - 'log { source(src); source(chroots); filter(f_newscrit); destination(newscrit); };'
+      - 'log { source(src); source(chroots); filter(f_newserr); destination(newserr); };'
+      - 'log { source(src); source(chroots); filter(f_newsnotice); destination(newsnotice); };'
+      - 'log { source(src); source(chroots); filter(f_mailinfo); destination(mailinfo); };'
+      - 'log { source(src); source(chroots); filter(f_mailwarn); destination(mailwarn); };'
+      - 'log { source(src); source(chroots); filter(f_mailerr); destination(mailerr); };'
+      - 'log { source(src); source(chroots); filter(f_mail); destination(mail); };'
+      - 'log { source(src); source(chroots); filter(f_acpid); destination(acpid); flags(final); };'
+      - 'log { source(src); source(chroots); filter(f_acpid_full); destination(devnull); flags(final); };'
+      - 'log { source(src); source(chroots); filter(f_acpid_old); destination(acpid); flags(final); };'
+      - 'log { source(src); source(chroots); filter(f_netmgm); destination(netmgm); flags(final); };'
+      - 'log { source(src); source(chroots); filter(f_local); destination(localmessages); };'
+      - 'log { source(src); source(chroots); filter(f_messages); destination(messages); };'
+      - 'log { source(src); source(chroots); filter(f_iptables); destination(firewall); };'
+      - 'log { source(src); source(chroots); filter(f_warn); destination(warn); };'
     changed_when: False
-    when: use_apparmor == True
+    when: syslognginstalled.rc == 0 and syslog_package == "syslog-ng"
+    notify: restart syslog-ng
     tags:
       - section4
-      - section4.5
+      - section4.2
+      - section4.2.2.2
+
+  - name: 4.2.2.3 Ensure syslog-ng default file permissions configured (Scored)
+    lineinfile:
+      dest: /etc/syslog-ng/syslog-ng.conf
+      regexp: '^options'
+      line: 'options { chain_hostnames(off); flush_lines(0); perm(0640); stats_freq(3600); threaded(yes); };'
+    when: syslognginstalled.rc == 0 and syslog_package == "syslog-ng"
+    notify: restart syslog-ng
+    tags:
+      - section4
+      - section4.2
+      - section4.2.2.3
+
+  - name: 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Scored)
+    lineinfile:
+      dest: /etc/syslog-ng/syslog-ng.conf
+      regexp: '^destination'
+      line: 'destination logserver { tcp(" logfile.example.com " port(514)); }; log { source(src); destination(logserver); };'
+    when: syslognginstalled.rc == 0 and syslog_package == "syslog-ng"
+    notify: restart syslog-ng
+    tags:
+      - section4
+      - section4.2
+      - section4.2.2.4
+
+  - name: 4.2.2.5 Ensure remote syslog-ng messages are only accepted on designated log hosts (Not Scored)
+    lineinfile:
+      dest: /etc/syslog-ng/syslog-ng.conf
+      line: '{{ item }}"'
+      insertafter: EOF
+    with_items:
+      - 'source net{ tcp(); };'
+      - 'destination remote { file("/var/log/remote/${FULLHOST}-log"); };'
+      - 'log { source(net); destination(remote); };'
+    when: syslognginstalled.rc == 0 and syslog_package == "syslog-ng"
+    notify: restart syslog-ng
+    tags:
+      - section4
+      - section4.2
+      - section4.2.2.5
+
+  - name: 4.2.4 Ensure permissions on all logfiles are configured (Scored)
+    shell: chmod -R g-wx,o-rwx /var/log/*
+    tags:
+      - section4
+      - section4.2
+      - section4.2.4
