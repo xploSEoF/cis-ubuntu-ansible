@@ -100,7 +100,3 @@ modify_user_homes: True
 # Section 06 Level 5
 # Default ntp server for when none-already exists.
 ntp_server: 192.168.112.1
-
-# Override to change the group and permissions of log files in 8.2.4 (eg, to 'adm' and 'g-wx,o-rwx' respectively)
-rsyslog_log_files_group: root
-rsyslog_log_files_permissions: og-rwx
