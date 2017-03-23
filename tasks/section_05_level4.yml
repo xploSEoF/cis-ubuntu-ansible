@@ -90,7 +90,7 @@
       - section5.4.2
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/5.4.2.sh
+      src: scripts/5.4.2.sh
       dest: /tmp/5.4.2.sh
       owner: root
       group: root
