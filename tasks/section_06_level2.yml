@@ -52,7 +52,7 @@
       - section6.2.5
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.6.sh
+      src: scripts/6.2.6.sh
       dest: /tmp/6.2.6.sh
       owner: root
       group: root
@@ -83,7 +83,7 @@
       - section6.2.6
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.7.sh
+      src: scripts/6.2.7.sh
       dest: /tmp/6.2.7.sh
       owner: root
       group: root
@@ -114,7 +114,7 @@
       - section6.2.7
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.8.sh
+      src: scripts/6.2.8.sh
       dest: /tmp/6.2.8.sh
       owner: root
       group: root
@@ -146,7 +146,7 @@
       - section6.2.8
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.9.sh
+      src: scripts/6.2.9.sh
       dest: /tmp/6.2.9.sh
       owner: root
       group: root
@@ -177,7 +177,7 @@
       - section6.2.9
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.10.sh
+      src: scripts/6.2.10.sh
       dest: /tmp/6.2.10.sh
       owner: root
       group: root
@@ -208,7 +208,7 @@
       - section6.2.10
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.11.sh
+      src: scripts/6.2.11.sh
       dest: /tmp/6.2.11.sh
       owner: root
       group: root
@@ -239,7 +239,7 @@
       - section6.2.11
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.12.sh
+      src: scripts/6.2.12.sh
       dest: /tmp/6.2.12.sh
       owner: root
       group: root
@@ -270,7 +270,7 @@
       - section6.2.12
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.13.sh
+      src: scripts/6.2.13.sh
       dest: /tmp/6.2.13.sh
       owner: root
       group: root
@@ -301,7 +301,7 @@
       - section6.2.13
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.14.sh
+      src: scripts/6.2.14.sh
       dest: /tmp/6.2.14.sh
       owner: root
       group: root
@@ -332,7 +332,7 @@
       - section6.2.14
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.15.sh
+      src: scripts/6.2.15.sh
       dest: /tmp/6.2.15.sh
       owner: root
       group: root
@@ -363,7 +363,7 @@
       - section6.2.15
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.16.sh
+      src: scripts/6.2.16.sh
       dest: /tmp/6.2.16.sh
       owner: root
       group: root
@@ -394,7 +394,7 @@
       - section6.2.16
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.17.sh
+      src: scripts/6.2.17.sh
       dest: /tmp/6.2.17.sh
       owner: root
       group: root
@@ -425,7 +425,7 @@
       - section6.2.17
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.18.sh
+      src: scripts/6.2.18.sh
       dest: /tmp/6.2.18.sh
       owner: root
       group: root
@@ -456,7 +456,7 @@
       - section6.2.18
 
   - copy:
-      src: /etc/ansible/roles-ubuntu/roles/cis/scripts/6.2.19.sh
+      src: scripts/6.2.19.sh
       dest: /tmp/6.2.19.sh
       owner: root
       group: root
