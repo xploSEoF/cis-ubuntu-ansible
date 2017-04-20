@@ -53,7 +53,7 @@
 
   - copy:
       src: scripts/6.2.6.sh
-      dest: /tmp/6.2.6.sh
+      dest: /opt/6.2.6.sh
       owner: root
       group: root
       mode: 0700
@@ -63,7 +63,7 @@
       - section6.2.6
 
   - name: 6.2.6 Ensure root PATH Integrity (Scored)
-    shell: /tmp/6.2.6.sh
+    shell: /opt/6.2.6.sh
     register: root_path_integrity
     tags:
       - section6
@@ -73,7 +73,7 @@
   - debug: var=root_path_integrity.stdout_lines
 
   - file:
-      path: /tmp/6.2.6.sh
+      path: /opt/6.2.6.sh
       owner: root
       group: root
       state: absent
@@ -84,7 +84,7 @@
 
   - copy:
       src: scripts/6.2.7.sh
-      dest: /tmp/6.2.7.sh
+      dest: /opt/6.2.7.sh
       owner: root
       group: root
       mode: 0700
@@ -94,7 +94,7 @@
       - section6.2.7
 
   - name: 6.2.7 Ensure all users' home directories exist (Scored)
-    shell: /tmp/6.2.7.sh
+    shell: /opt/6.2.7.sh
     register: home_directories_exist
     tags:
       - section6
@@ -104,7 +104,7 @@
   - debug: var=home_directories_exist.stdout_lines
 
   - file:
-      path: /tmp/6.2.7.sh
+      path: /opt/6.2.7.sh
       owner: root
       group: root
       state: absent
@@ -115,7 +115,7 @@
 
   - copy:
       src: scripts/6.2.8.sh
-      dest: /tmp/6.2.8.sh
+      dest: /opt/6.2.8.sh
       owner: root
       group: root
       mode: 0700
@@ -125,7 +125,7 @@
       - section6.2.8
 
   - name: 6.2.8 Ensure users' home directories permissions are 750 or more restrictive (Scored)
-    shell: /tmp/6.2.8.sh
+    shell: /opt/6.2.8.sh
     register: home_directories_permissions
     when: modify_user_homes == True
     tags:
@@ -136,7 +136,7 @@
   - debug: var=home_directories_permissions.stdout_lines
 
   - file:
-      path: /tmp/6.2.8.sh
+      path: /opt/6.2.8.sh
       owner: root
       group: root
       state: absent
@@ -147,7 +147,7 @@
 
   - copy:
       src: scripts/6.2.9.sh
-      dest: /tmp/6.2.9.sh
+      dest: /opt/6.2.9.sh
       owner: root
       group: root
       mode: 0700
@@ -157,7 +157,7 @@
       - section6.2.9
 
   - name: 6.2.9 Ensure users own their home directories (Scored)
-    shell: /tmp/6.2.9.sh
+    shell: /opt/6.2.9.sh
     register: home_directories_own
     tags:
       - section6
@@ -167,7 +167,7 @@
   - debug: var=home_directories_own.stdout_lines
 
   - file:
-      path: /tmp/6.2.9.sh
+      path: /opt/6.2.9.sh
       owner: root
       group: root
       state: absent
@@ -178,7 +178,7 @@
 
   - copy:
       src: scripts/6.2.10.sh
-      dest: /tmp/6.2.10.sh
+      dest: /opt/6.2.10.sh
       owner: root
       group: root
       mode: 0700
@@ -188,7 +188,7 @@
       - section6.2.10
 
   - name: 6.2.10 Ensure users' dot files are not group or world writable (Scored)
-    shell: /tmp/6.2.10.sh
+    shell: /opt/6.2.10.sh
     register: user_dot_files
     tags:
       - section6
@@ -198,7 +198,7 @@
   - debug: var=user_dot_files.stdout_lines
 
   - file:
-      path: /tmp/6.2.10.sh
+      path: /opt/6.2.10.sh
       owner: root
       group: root
       state: absent
@@ -209,7 +209,7 @@
 
   - copy:
       src: scripts/6.2.11.sh
-      dest: /tmp/6.2.11.sh
+      dest: /opt/6.2.11.sh
       owner: root
       group: root
       mode: 0700
@@ -219,7 +219,7 @@
       - section6.2.11
 
   - name: 6.2.11 Ensure no users have .forward files (Scored)
-    shell: /tmp/6.2.11.sh
+    shell: /opt/6.2.11.sh
     register: user_forward_files
     tags:
       - section6
@@ -229,7 +229,7 @@
   - debug: var=user_forward_files.stdout_lines
 
   - file:
-      path: /tmp/6.2.11.sh
+      path: /opt/6.2.11.sh
       owner: root
       group: root
       state: absent
@@ -240,7 +240,7 @@
 
   - copy:
       src: scripts/6.2.12.sh
-      dest: /tmp/6.2.12.sh
+      dest: /opt/6.2.12.sh
       owner: root
       group: root
       mode: 0700
@@ -250,7 +250,7 @@
       - section6.2.12
 
   - name: 6.2.12 Ensure no users have .netrc files (Scored)
-    shell: /tmp/6.2.12.sh
+    shell: /opt/6.2.12.sh
     register: user_netrc_files
     tags:
       - section6
@@ -260,7 +260,7 @@
   - debug: var=user_netrc_files.stdout_lines
 
   - file:
-      path: /tmp/6.2.12.sh
+      path: /opt/6.2.12.sh
       owner: root
       group: root
       state: absent
@@ -271,7 +271,7 @@
 
   - copy:
       src: scripts/6.2.13.sh
-      dest: /tmp/6.2.13.sh
+      dest: /opt/6.2.13.sh
       owner: root
       group: root
       mode: 0700
@@ -281,7 +281,7 @@
       - section6.2.13
 
   - name: 6.2.13 Ensure users' .netrc Files are not group or world accessible (Scored)
-    shell: /tmp/6.2.13.sh
+    shell: /opt/6.2.13.sh
     register: user_netrc_files_permissions
     tags:
       - section6
@@ -291,7 +291,7 @@
   - debug: var=user_netrc_files_permissions.stdout_lines
 
   - file:
-      path: /tmp/6.2.13.sh
+      path: /opt/6.2.13.sh
       owner: root
       group: root
       state: absent
@@ -302,7 +302,7 @@
 
   - copy:
       src: scripts/6.2.14.sh
-      dest: /tmp/6.2.14.sh
+      dest: /opt/6.2.14.sh
       owner: root
       group: root
       mode: 0700
@@ -312,7 +312,7 @@
       - section6.2.14
 
   - name: 6.2.14 Ensure no users have .rhosts files (Scored)
-    shell: /tmp/6.2.14.sh
+    shell: /opt/6.2.14.sh
     register: user_rhosts_files
     tags:
       - section6
@@ -322,7 +322,7 @@
   - debug: var=user_rhosts_files.stdout_lines
 
   - file:
-      path: /tmp/6.2.14.sh
+      path: /opt/6.2.14.sh
       owner: root
       group: root
       state: absent
@@ -333,7 +333,7 @@
 
   - copy:
       src: scripts/6.2.15.sh
-      dest: /tmp/6.2.15.sh
+      dest: /opt/6.2.15.sh
       owner: root
       group: root
       mode: 0700
@@ -343,7 +343,7 @@
       - section6.2.15
 
   - name: 6.2.15 Ensure all groups in /etc/passwd exist in /etc/group (Scored)
-    shell: /tmp/6.2.15.sh
+    shell: /opt/6.2.15.sh
     register: check_groups_in_passwd
     tags:
       - section6
@@ -353,7 +353,7 @@
   - debug: var=check_groups_in_passwd.stdout_lines
 
   - file:
-      path: /tmp/6.2.15.sh
+      path: /opt/6.2.15.sh
       owner: root
       group: root
       state: absent
@@ -364,7 +364,7 @@
 
   - copy:
       src: scripts/6.2.16.sh
-      dest: /tmp/6.2.16.sh
+      dest: /opt/6.2.16.sh
       owner: root
       group: root
       mode: 0700
@@ -374,7 +374,7 @@
       - section6.2.16
 
   - name: 6.2.16 Ensure no duplicate UIDs exist (Scored)
-    shell: /tmp/6.2.16.sh
+    shell: /opt/6.2.16.sh
     register: duplicate_uids
     tags:
       - section6
@@ -384,7 +384,7 @@
   - debug: var=duplicate_uids.stdout_lines
 
   - file:
-      path: /tmp/6.2.16.sh
+      path: /opt/6.2.16.sh
       owner: root
       group: root
       state: absent
@@ -395,7 +395,7 @@
 
   - copy:
       src: scripts/6.2.17.sh
-      dest: /tmp/6.2.17.sh
+      dest: /opt/6.2.17.sh
       owner: root
       group: root
       mode: 0700
@@ -405,7 +405,7 @@
       - section6.2.17
 
   - name: 6.2.17 Ensure no duplicate GIDs exist (Scored)
-    shell: /tmp/6.2.17.sh
+    shell: /opt/6.2.17.sh
     register: duplicate_gids
     tags:
       - section6
@@ -415,7 +415,7 @@
   - debug: var=duplicate_gids.stdout_lines
 
   - file:
-      path: /tmp/6.2.17.sh
+      path: /opt/6.2.17.sh
       owner: root
       group: root
       state: absent
@@ -426,7 +426,7 @@
 
   - copy:
       src: scripts/6.2.18.sh
-      dest: /tmp/6.2.18.sh
+      dest: /opt/6.2.18.sh
       owner: root
       group: root
       mode: 0700
@@ -436,7 +436,7 @@
       - section6.2.18
 
   - name: 6.2.18 Ensure no duplicate user names exist (Scored)
-    shell: /tmp/6.2.18.sh
+    shell: /opt/6.2.18.sh
     register: duplicate_users
     tags:
       - section6
@@ -446,7 +446,7 @@
   - debug: var=duplicate_users.stdout_lines
 
   - file:
-      path: /tmp/6.2.18.sh
+      path: /opt/6.2.18.sh
       owner: root
       group: root
       state: absent
@@ -457,7 +457,7 @@
 
   - copy:
       src: scripts/6.2.19.sh
-      dest: /tmp/6.2.19.sh
+      dest: /opt/6.2.19.sh
       owner: root
       group: root
       mode: 0700
@@ -467,7 +467,7 @@
       - section6.2.19
 
   - name: 6.2.19 Ensure no duplicate group names exist (Scored)
-    shell: /tmp/6.2.19.sh
+    shell: /opt/6.2.19.sh
     register: duplicate_groups
     tags:
       - section6
@@ -477,7 +477,7 @@
   - debug: var=duplicate_groups.stdout_lines
 
   - file:
-      path: /tmp/6.2.19.sh
+      path: /opt/6.2.19.sh
       owner: root
       group: root
       state: absent
