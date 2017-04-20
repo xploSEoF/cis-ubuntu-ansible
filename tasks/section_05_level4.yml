@@ -91,7 +91,7 @@
 
   - copy:
       src: scripts/5.4.2.sh
-      dest: /tmp/5.4.2.sh
+      dest: /opt/5.4.2.sh
       owner: root
       group: root
       mode: 0700
@@ -101,7 +101,7 @@
       - section5.4.2
 
   - name: 5.4.2 Ensure system accounts are non-login (Scored)
-    shell: /tmp/5.4.2.sh
+    shell: /opt/5.4.2.sh
     when: system_acounts.stdout != ""
     tags:
       - section5
@@ -110,7 +110,7 @@
 
   - name: prueba
     file:
-      path: /tmp/5.4.2.sh
+      path: /opt/5.4.2.sh
       owner: root
       group: root
       mode: 0700
