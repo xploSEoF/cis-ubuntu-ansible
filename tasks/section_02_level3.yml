@@ -12,7 +12,7 @@
   - name: 2.3.2 Ensure rsh client is not installed (Scored)
     apt:
       name: "{{ item }}"
-      state: present
+      state: absent
     with_items:
       - rsh-client
       - rsh-redone-client
